@@ -1,8 +1,9 @@
 import express from 'express';
+import { adminOnly, protect } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", protect, adminOnly, (req, res) => {
     res.json({
         success: true,
         message: "Admin route working"
