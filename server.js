@@ -15,7 +15,12 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        "http://localhost:3000",
+      "https://velvet-vine-frontend.vercel.app/"
+    ],
+}));
 app.use(express.json());
 
 
