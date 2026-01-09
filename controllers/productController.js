@@ -16,16 +16,15 @@ const getProducts = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-        const { name, price } = req.body;
+        const { name, price, image } = req.body;
 
-        if (!name || !price) {
+        if (!name || !price || !image) {
             return res.status(400).json({
-                message: "Name and price are required fields."
+                message: "Name, price, and image are required fields."
             });
         }
 
-        const product = await Product.create({ name, price });
-
+        const product = await Product.create({ name, price, image });
         res.status(201).json({
             success: true,
             message: "Product created successfully.",
