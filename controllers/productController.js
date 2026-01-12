@@ -37,4 +37,21 @@ const createProduct = async (req, res) => {
     }
 }
 
-export { getProducts, createProduct };
+//(public)
+
+const getProductById = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+
+        if(!product || !product.isActive) {
+            return res.status(401).json({
+                message: "Product not found or inactive."
+            });
+        }
+        res.json({ success: true, product });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { getProducts, createProduct, getProductById };
