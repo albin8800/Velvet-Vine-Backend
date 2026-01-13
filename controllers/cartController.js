@@ -22,5 +22,34 @@ import User from "../models/User.js";
             const user = await User.findById(req.user.id).populate("cart.product");
             res.status(200).json({ success: true, cart: user.cart });
         }
-   
-        export { addToCart, getCart };
+
+        const updateCartItem = async (req, res) => {
+            const { productId, quantity } = req.body;
+            if (!productId || !quantity || quantity < 1) {
+                return res.status(400).json({ success: false, message: "Invalid input" });
+            }
+
+            const user = await User.findById(req.user.id);
+            const item = user.cart.find(
+                (i) => i.product.toString() === productId
+            );
+
+            if (!item) {
+                return res.status(404).json({ success: false, message: "Item not found in cart" });
+            }
+            item.quantity = quantity;
+            await user.save();
+            res.status(200).json({ success: true, cart: user.cart });
+        }
+
+        const removeFromCart = async (req, res) => {
+            const { productId } = req.params;
+
+            const user = await User.findById(req.user.id);
+            user.cart = user.cart.filter(
+                (i) => i.product.toString() !== productId
+            );
+            await user.save();
+            res.status(200).json({ success: true, cart: user.cart });
+        }
+        export { addToCart, getCart, updateCartItem, removeFromCart };
